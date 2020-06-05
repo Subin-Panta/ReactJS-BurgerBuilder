@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import classes from './buildControls.module.css'
 import { BuildControl } from './BuildControl/BuildControl'
 const controls = [
@@ -10,26 +10,37 @@ const controls = [
 
 export const BuildControls = props => {
   return (
-    <div className={classes.BuildControls}>
-      <p>
-        Current Price:<strong>$ {props.price.toFixed(2)}</strong>
-      </p>
-      {controls.map(ctrl => (
-        <BuildControl
-          key={ctrl.label}
-          label={ctrl.label}
-          added={() => props.ingredientAdded(ctrl.type)}
-          removed={() => props.ingredientRemoved(ctrl.type)}
-          disabled={props.disabled[ctrl.type]}
-        />
-      ))}
-      <button
-        className={classes.OrderButton}
-        onClick={props.ordered}
-        disabled={!props.purchasable}
-      >
-        Order Now
-      </button>
-    </div>
+    <Fragment>
+      <div className={classes.BuildControls}>
+        <p>
+          Current Price:<strong>$ {props.price.toFixed(2)}</strong>
+        </p>
+        {controls.map(ctrl => (
+          <BuildControl
+            key={ctrl.label}
+            label={ctrl.label}
+            added={() => props.ingredientAdded(ctrl.type)}
+            removed={() => props.ingredientRemoved(ctrl.type)}
+            disabled={props.disabled[ctrl.type]}
+          />
+        ))}
+      </div>
+      <div className={classes.ButtonSection}>
+        <button
+          className={classes.OrderButton}
+          onClick={props.ordered}
+          disabled={!props.purchasable}
+        >
+          Order Now
+        </button>
+        <button
+          className={classes.ClearButton}
+          onClick={props.clear}
+          disabled={!props.purchasable}
+        >
+          Clear All
+        </button>
+      </div>
+    </Fragment>
   )
 }
