@@ -1,31 +1,36 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, Component } from 'react'
 import { Button } from '../../UI/Button/Button'
 
-export const OrderSummary = props => {
-  const ingredientSummray = Object.keys(props.ingredients).map(igKey => {
+export class OrderSummary extends Component {
+  componentDidUpdate() {
+    console.log('[order Summray updated]')
+  }
+  render() {
+    const ingredientSummray = Object.keys(this.props.ingredients).map(igKey => {
+      return (
+        <li key={igKey}>
+          <span style={{ textTransform: 'capitalize' }}>{igKey}</span>:
+          {this.props.ingredients[igKey]}
+        </li>
+      )
+    })
     return (
-      <li key={igKey}>
-        <span style={{ textTransform: 'capitalize' }}>{igKey}</span>:
-        {props.ingredients[igKey]}
-      </li>
-    )
-  })
-  return (
-    <Fragment>
-      <h3> Your Order</h3>
-      <p>A Burger with the following ingredients:</p>
-      <ul>{ingredientSummray}</ul>
-      <p>
-        <strong>Total Price: {props.price.toFixed(2)} </strong>
-      </p>
-      <p>Continue to Checkout?</p>
-      <Button btnType='Danger' clicked={props.purchaseCancelled}>
-        Cancel
-      </Button>
+      <Fragment>
+        <h3> Your Order</h3>
+        <p>A Burger with the following ingredients:</p>
+        <ul>{ingredientSummray}</ul>
+        <p>
+          <strong>Total Price: {this.props.price.toFixed(2)} </strong>
+        </p>
+        <p>Continue to Checkout?</p>
+        <Button btnType='Danger' clicked={this.props.purchaseCancelled}>
+          Cancel
+        </Button>
 
-      <Button btnType='Success' clicked={props.purchaseContinued}>
-        Continue
-      </Button>
-    </Fragment>
-  )
+        <Button btnType='Success' clicked={this.props.purchaseContinued}>
+          Continue
+        </Button>
+      </Fragment>
+    )
+  }
 }
