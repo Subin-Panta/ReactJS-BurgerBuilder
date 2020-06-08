@@ -19,7 +19,8 @@ class BurgerBuilder extends Component {
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    error: false
   }
 
   async componentDidMount() {
@@ -28,7 +29,7 @@ class BurgerBuilder extends Component {
       console.log(response)
       this.setState({ ingredients: response.data })
     } catch (error) {
-      console.log(error)
+      this.setState({ error: true })
     }
   }
   updatePurchaseState(ingredients) {
@@ -106,7 +107,8 @@ class BurgerBuilder extends Component {
       totalPrice: 4,
       purchasable: false,
       purchasing: false,
-      loading: false
+      loading: false,
+      error: false
     })
     this.componentDidMount()
   }
@@ -119,7 +121,11 @@ class BurgerBuilder extends Component {
     }
     let orderSummary = null
 
-    let burger = <Spiner />
+    let burger = this.state.error ? (
+      <p>Ingredients can't be loaded</p>
+    ) : (
+      <Spiner />
+    )
     if (this.state.ingredients) {
       burger = (
         <Fragment>
