@@ -2,23 +2,36 @@
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
+
+  text-align: center;
 }
+
 .Label {
   font-weight: bold;
   display: block;
   margin-bottom: 8px;
 }
+
 .InputElement {
   outline: none;
-  border: 1px solid #ccc;
+  border-color: seagreen;
   background-color: white;
   font: inherit;
   padding: 6px 10px;
   display: block;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 25px;
+  text-align: center;
+  text-align-last: center;
 }
+
 .InputElement:focus {
   outline: none;
   background-color: #ccc;
+}
+
+.Invalid {
+  border-color: salmon;
+  border-style: none;
 }
