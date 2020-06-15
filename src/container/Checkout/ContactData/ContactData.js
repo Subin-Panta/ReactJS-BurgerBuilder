@@ -4,13 +4,61 @@ import classes from './ContactData.module.css'
 import axios from '../../../axios-orders'
 import { Spiner } from '../../../components/UI/Spiner/Spiner'
 import { withRouter } from 'react-router-dom'
+import { Input } from '../../../components/UI/Input/Input'
 class ContactData extends Component {
   state = {
-    name: '',
-    email: '',
-    address: {
-      street: '',
-      postalCode: ''
+    orderForm: {
+      name: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Your Name'
+        },
+        value: ''
+      },
+      street: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Your Street'
+        },
+        value: ''
+      },
+      zipcode: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'ZIP code'
+        },
+        value: ''
+      },
+      country: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Country'
+        },
+        value: ''
+      },
+      email: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'email',
+          placeholder: 'Your E-mail'
+        },
+        value: ''
+      },
+      deliveryMethod: {
+        elementType: 'select',
+        elementConfig: {
+          options: [
+            { value: '', displayValue: '--Select a Delivery Method--' },
+            { value: 'fastest', displayValue: 'Fastest' },
+            { value: 'cheapest', displayValue: 'Cheapest' }
+          ]
+        },
+        value: ''
+      }
     },
     loading: false
   }
@@ -18,19 +66,17 @@ class ContactData extends Component {
     event.preventDefault()
     console.log(this.props.ingredients)
     this.setState({ loading: true })
+    const formData = {}
+    for (let formElementIdentifier in this.state.orderForm) {
+      formData[formElementIdentifier] = this.state.orderForm[
+        formElementIdentifier
+      ].value
+    }
+    console.log(formData)
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.price,
-      customer: {
-        name: 'Subin Panta',
-        address: {
-          street: 'test',
-          zipcode: '123123',
-          country: 'Nepal'
-        },
-        email: 'test@test.com'
-      },
-      deliveryMethod: 'Lightning'
+      orderData: formData
     }
     try {
       await axios.post('/orders.json', order)
@@ -41,16 +87,34 @@ class ContactData extends Component {
       this.setState({ loading: false })
     }
   }
+
+  inputChangedHandler = (e, inputIdentifier) => {
+    const updatedOrderForm = { ...this.state.orderForm }
+    const updateFormElement = { ...updatedOrderForm[inputIdentifier] }
+    updateFormElement.value = e.target.value
+    updatedOrderForm[inputIdentifier] = updateFormElement
+    this.setState({ orderForm: updatedOrderForm })
+  }
   render() {
+    const formElementsArray = []
+    for (let key in this.state.orderForm) {
+      formElementsArray.push({
+        id: key,
+        config: this.state.orderForm[key]
+      })
+    }
     let form = (
-      <form>
-        <input type='text' name='name' placeholder='Your Name' />
-        <input type='email' name='email' placeholder='Your email' />
-        <input type='text' name='street' placeholder='Street' />
-        <input type='text' name='postal' placeholder=' Postal' />
-        <Button btnType='Success' clicked={this.orderHandler}>
-          order
-        </Button>
+      <form onSubmit={this.orderHandler}>
+        {formElementsArray.map(formElement => (
+          <Input
+            key={formElement.id}
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}
+            changed={e => this.inputChangedHandler(e, formElement.id)}
+          />
+        ))}
+        <Button btnType='Success'>Order</Button>
       </form>
     )
     if (this.state.loading) {
