@@ -5,6 +5,7 @@ import axios from '../../../axios-orders'
 import { Spiner } from '../../../components/UI/Spiner/Spiner'
 import { withRouter } from 'react-router-dom'
 import { Input } from '../../../components/UI/Input/Input'
+import { connect } from 'react-redux'
 class ContactData extends Component {
   state = {
     orderForm: {
@@ -90,7 +91,6 @@ class ContactData extends Component {
   }
   orderHandler = async event => {
     event.preventDefault()
-    console.log(this.props.ingredients)
     this.setState({ loading: true })
     const formData = {}
     for (let formElementIdentifier in this.state.orderForm) {
@@ -100,8 +100,8 @@ class ContactData extends Component {
     }
     console.log(formData)
     const order = {
-      ingredients: this.props.ingredients,
-      price: this.props.price,
+      ingredients: this.props.ings,
+      price: this.props.totalPrice,
       orderData: formData
     }
     try {
@@ -177,4 +177,10 @@ class ContactData extends Component {
     )
   }
 }
-export default withRouter(ContactData)
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    totalPrice: state.totalPrice
+  }
+}
+export default connect(mapStateToProps)(withRouter(ContactData))
