@@ -7,23 +7,15 @@ import axios from '../../axios-orders'
 import { Spiner } from '../../components/UI/Spiner/Spiner'
 import { withErrorHandler } from '../../components/hoc/withErrorHandler/withErrorHandler'
 import { connect } from 'react-redux'
-import * as actionTypes from '../../store/actions'
+import * as burgerBuilderActions from '../../store/actions/index'
 
 class BurgerBuilder extends Component {
   state = {
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
   }
 
-  async componentDidMount() {
-    // try {
-    //   const response = await axios.get('/ingredients.json')
-    //   console.log(response)
-    //   this.setState({ ingredients: response.data })
-    // } catch (error) {
-    //   this.setState({ error: true })
-    // }
+  componentDidMount() {
+    this.props.onInit()
   }
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
@@ -57,7 +49,7 @@ class BurgerBuilder extends Component {
 
     let orderSummary = null
 
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients can't be loaded</p>
     ) : (
       <Spiner />
@@ -86,9 +78,7 @@ class BurgerBuilder extends Component {
         />
       )
     }
-    if (this.state.loading) {
-      orderSummary = <Spiner />
-    }
+
     return (
       <Fragment>
         <Modal
@@ -105,16 +95,18 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
   return {
     ings: state.ingredients,
-    totalPrice: state.totalPrice
+    totalPrice: state.totalPrice,
+    error: state.error
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
     onIngredientAdded: ingredientName =>
-      dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName }),
+      dispatch(burgerBuilderActions.addIngredient(ingredientName)),
     onIngredientRemoved: ingredientName =>
-      dispatch({ type: actionTypes.REMOVE_INGREDIENT, ingredientName }),
-    onCLearAll: () => dispatch({ type: actionTypes.CLEAR_ALL })
+      dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
+    onCLearAll: () => dispatch(burgerBuilderActions.clearAll()),
+    onInit: () => dispatch(burgerBuilderActions.initIngredients())
   }
 }
 export default connect(
