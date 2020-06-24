@@ -12,11 +12,17 @@ export const removeIngredient = ingredientName => {
     ingredientName
   }
 }
-export const clearAll = () => {
+export const clearIngs = () => {
   return {
     type: actionTypes.CLEAR_ALL
   }
-} 
+}
+export const clearAll = () => {
+  return dispatch => {
+    dispatch(clearIngs())
+    dispatch(initIngredients())
+  }
+}
 export const setIngredients = ingredients => {
   return {
     type: actionTypes.SET_INGREDIENTS,

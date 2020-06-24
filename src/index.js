@@ -6,14 +6,11 @@ import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { createStore, compose, applyMiddleware } from 'redux'
-import burgerBuilder from './store/reducer/burgerBuilder'
 import thunk from 'redux-thunk'
+import rootReducer from './store/reducer/index'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const store = createStore(
-  burgerBuilder,
-  composeEnhancers (applyMiddleware(thunk))
-)
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 const app = (
   <Provider store={store}>
     <Router>

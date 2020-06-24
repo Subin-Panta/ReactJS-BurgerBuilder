@@ -6,3 +6,8 @@
   margin: 10px auto;
   box-sizing: border-box;
 }
+.Order:hover {
+  background-color: rgb(109, 109, 109);
+  text-decoration: line-through;
+  opacity: 50%;
+}

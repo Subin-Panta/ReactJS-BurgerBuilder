@@ -1,39 +1,53 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Order } from '../../components/Order/Order'
 import axios from '../../axios-orders'
 import { withErrorHandler } from '../../components/hoc/withErrorHandler/withErrorHandler'
+import { connect } from 'react-redux'
+import * as actions from '../../store/actions/index'
+import { Spiner } from '../../components/UI/Spiner/Spiner'
 class Orders extends Component {
-  state = {
-    orders: [],
-    loading: true
-  }
-  async componentDidMount() {
-    try {
-      const response = await axios.get('/orders.json')
-      console.log(response.data)
-      const fetchedOrders = []
-      for (let key in response.data) {
-        fetchedOrders.push({ ...response.data[key], id: key })
-      }
-      console.log(fetchedOrders)
-      this.setState({ loading: false, orders: fetchedOrders })
-    } catch (error) {
-      console.log(error)
-      this.setState({ loading: false })
-    }
+  componentDidMount() {
+    this.props.onFetchOrders()
   }
   render() {
+    let errMSg = <p>Order Cannot be deleted</p>
+    let orders = <Spiner />
+    if (!this.props.loading) {
+      orders = (
+        <div>
+          {this.props.orders.map(order => (
+            <div
+              key={order.id}
+              onClick={() => this.props.onClickDelete(order.id)}
+            >
+              <Order ingredients={order.ingredients} price={order.price} />
+            </div>
+          ))}
+        </div>
+      )
+    }
     return (
-      <div>
-        {this.state.orders.map(order => (
-          <Order
-            key={order.id}
-            ingredients={order.ingredients}
-            price={order.price}
-          />
-        ))}
-      </div>
+      <Fragment>
+        {orders}
+        {this.props.error ? errMSg : null}
+      </Fragment>
     )
   }
 }
-export default withErrorHandler(Orders, axios)
+const mapStateToProps = state => {
+  return {
+    orders: state.order.orders,
+    loading: state.order.loading,
+    error: state.order.error
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    onFetchOrders: () => dispatch(actions.fetchOrders()),
+    onClickDelete: id => dispatch(actions.Startdelete(id))
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(Orders, axios))
