@@ -19,7 +19,7 @@ export const SideDrawer = props => {
           </Link>
         </div>
         <nav>
-          <NavigationItems />
+          <NavigationItems isAuthenticated={props.isAuth} />
         </nav>
       </div>
     </Fragment>

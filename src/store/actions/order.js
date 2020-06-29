@@ -19,11 +19,11 @@ export const purchaseBurgerStart = () => {
     type: actionTypes.PURCHASE_BURGER_START
   }
 }
-export const purchaseBurger = orderData => {
+export const purchaseBurger = (orderData, token) => {
   return async dispatch => {
     dispatch(purchaseBurgerStart())
     try {
-      const response = await axios.post('/orders.json', orderData)
+      const response = await axios.post('/orders.json?auth=' + token, orderData)
       dispatch(purchaseBurgerSuccess(response.data.name, orderData))
     } catch (error) {
       dispatch(purchaseBurgerFail(error))
@@ -53,11 +53,11 @@ export const fetchOrdersStart = () => {
     type: actionTypes.FETCH_ORDERS_START
   }
 }
-export const fetchOrders = () => {
+export const fetchOrders = token => {
   return async dispatch => {
     dispatch(fetchOrdersStart())
     try {
-      const response = await axios.get('/orders.json')
+      const response = await axios.get('/orders.json?auth=' + token)
       const fetchedOrders = []
       for (let key in response.data) {
         fetchedOrders.push({ ...response.data[key], id: key })
@@ -79,11 +79,11 @@ export const deleteFail = () => {
     type: actionTypes.DELETE_FAIL
   }
 }
-export const Startdelete = id => {
+export const Startdelete = (id, token) => {
   return async dispatch => {
-    dispatch(deleteOrder(id))
+    dispatch(deleteOrder(id, token))
     try {
-      await axios.delete('./orders/' + id + '.json')
+      await axios.delete('./orders/' + id + '.json?auth=' + token)
     } catch (error) {
       dispatch(deleteFail(error))
     }

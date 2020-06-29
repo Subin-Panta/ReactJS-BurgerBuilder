@@ -9,22 +9,19 @@ const controls = [
 ]
 
 export const BuildControls = props => {
-  return (
-    <Fragment>
-      <div className={classes.BuildControls}>
-        <p>
-          Current Price:<strong>$ {props.price.toFixed(2)}</strong>
-        </p>
-        {controls.map(ctrl => (
-          <BuildControl
-            key={ctrl.label}
-            label={ctrl.label}
-            added={() => props.ingredientAdded(ctrl.type)}
-            removed={() => props.ingredientRemoved(ctrl.type)}
-            disabled={props.disabled[ctrl.type]}
-          />
-        ))}
-      </div>
+  let buttons = (
+    <div className={classes.ButtonSection}>
+      <button
+        className={classes.ClearButton }
+        onClick={props.ordered}
+        disabled={!props.purchasable}
+      >
+        Sign Up/In to Order
+      </button>
+    </div>
+  )
+  if (props.isAuth) {
+    buttons = (
       <div className={classes.ButtonSection}>
         <button
           className={classes.OrderButton}
@@ -41,6 +38,26 @@ export const BuildControls = props => {
           Clear All
         </button>
       </div>
+    )
+  }
+  return (
+    <Fragment>
+      <div className={classes.BuildControls}>
+        <p>
+          Current Price:<strong>$ {props.price.toFixed(2)}</strong>
+        </p>
+        {controls.map(ctrl => (
+          <BuildControl
+            key={ctrl.label}
+            label={ctrl.label}
+            added={() => props.ingredientAdded(ctrl.type)}
+            removed={() => props.ingredientRemoved(ctrl.type)}
+            disabled={props.disabled[ctrl.type]}
+          />
+        ))}
+      </div>
+
+      {buttons}
     </Fragment>
   )
 }

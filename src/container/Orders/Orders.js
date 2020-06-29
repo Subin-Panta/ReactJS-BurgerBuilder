@@ -7,7 +7,7 @@ import * as actions from '../../store/actions/index'
 import { Spiner } from '../../components/UI/Spiner/Spiner'
 class Orders extends Component {
   componentDidMount() {
-    this.props.onFetchOrders()
+    this.props.onFetchOrders(this.props.token)
   }
   render() {
     let errMSg = <p>Order Cannot be deleted</p>
@@ -18,7 +18,9 @@ class Orders extends Component {
           {this.props.orders.map(order => (
             <div
               key={order.id}
-              onClick={() => this.props.onClickDelete(order.id)}
+              onClick={() =>
+                this.props.onClickDelete(order.id, this.props.token)
+              }
             >
               <Order ingredients={order.ingredients} price={order.price} />
             </div>
@@ -38,13 +40,14 @@ const mapStateToProps = state => {
   return {
     orders: state.order.orders,
     loading: state.order.loading,
-    error: state.order.error
+    error: state.order.error,
+    token: state.auth.token
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchOrders: () => dispatch(actions.fetchOrders()),
-    onClickDelete: id => dispatch(actions.Startdelete(id))
+    onFetchOrders: token => dispatch(actions.fetchOrders(token)),
+    onClickDelete: (id, token) => dispatch(actions.Startdelete(id, token))
   }
 }
 export default connect(

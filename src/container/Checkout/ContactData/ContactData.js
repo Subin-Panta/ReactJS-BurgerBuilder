@@ -68,7 +68,8 @@ class ContactData extends Component {
         },
         value: '',
         validation: {
-          required: true
+          required: true,
+          isEmail: true
         },
         valid: false
       },
@@ -104,17 +105,40 @@ class ContactData extends Component {
       price: this.props.totalPrice,
       orderData: formData
     }
-    this.props.onOrderBurger(order)
+    this.props.onOrderBurger(order, this.props.token)
   }
 
   checkValidity(value, rules) {
     let isValid = true
+    if (!rules) {
+      return true
+    }
+
     if (rules.required) {
       isValid = value.trim() !== '' && isValid
+    }
+
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid
     }
     if (rules.length) {
       isValid = value.length === rules.length && isValid
     }
+
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength && isValid
+    }
+
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+      isValid = pattern.test(value) && isValid
+    }
+
+    if (rules.isNumeric) {
+      const pattern = /^\d+$/
+      isValid = pattern.test(value) && isValid
+    }
+
     return isValid
   }
   inputChangedHandler = (e, inputIdentifier) => {
@@ -174,12 +198,14 @@ const mapStateToProps = state => {
   return {
     ings: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
-    loading: state.order.loading
+    loading: state.order.loading,
+    token: state.auth.token
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    onOrderBurger: orderData => dispatch(actions.purchaseBurger(orderData))
+    onOrderBurger: (orderData, token) =>
+      dispatch(actions.purchaseBurger(orderData, token))
   }
 }
 export default connect(
