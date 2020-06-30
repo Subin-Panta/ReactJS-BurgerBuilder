@@ -45,7 +45,7 @@ export const auth = (email, password, isSignUp) => {
       password,
       returnSecureToken: true
     }
-    const key = 'AIzaSyDemcQo6qDeX0g5qmmGq1EvGIc6Hx0gurQ'
+    const key = process.env.FIREBASE_KEY
     let url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + key
     if (!isSignUp) {
