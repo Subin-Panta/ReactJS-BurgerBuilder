@@ -2,9 +2,6 @@ import React, { Fragment, Component } from 'react'
 import { Button } from '../../UI/Button/Button'
 
 export class OrderSummary extends Component {
-  componentDidUpdate() {
-    console.log('[order Summray updated]')
-  }
   render() {
     const ingredientSummray = Object.keys(this.props.ingredients).map(igKey => {
       return (

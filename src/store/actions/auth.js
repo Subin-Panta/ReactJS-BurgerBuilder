@@ -55,7 +55,7 @@ export const auth = (email, password, isSignUp) => {
     }
     try {
       const response = await axios.post(url, authData)
-      console.log(response)
+     
       const expirationDate = new Date(
         new Date().getTime() + response.data.expiresIn * 1000
       )

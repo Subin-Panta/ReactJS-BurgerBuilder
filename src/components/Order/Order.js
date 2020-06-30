@@ -8,9 +8,10 @@ export const Order = props => {
       amount: props.ingredients[ingredientName]
     })
   }
-  console.log(ingredients)
-  const ingredientOutput = ingredients.map(ig => (
+
+  const ingredientOutput = ingredients.map((ig, index) => (
     <span
+      key={index}
       style={{
         textTransform: 'capitalize',
         display: 'inline-block',
@@ -18,7 +19,6 @@ export const Order = props => {
         border: '1px solid #ccc',
         padding: '5px'
       }}
-      key={ig.name}
     >
       {ig.name}({ig.amount})
     </span>
